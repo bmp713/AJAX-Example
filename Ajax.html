@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<style>
+#video_container{
+	position: fixed;
+	top: -100;
+	left: 0;
+	width: 100%;
+	background: rgba(10, 10, 10, 1);
+}
+#video_container video{
+	position: relative;
+	z-index: -99;
+}
+#container{
+	background: url("assets/images/apple_keys.jpg") no-repeat fixed;
+	background-size: 100%;
+	background: cover;
+}
+#main{
+	position: relative;
+	top: 100px;
+	margin: auto;
+	width: 60%;
+	padding: 100px 50px;
+	font: 16px sans-serif, times;	
+	color: rgba(255, 255, 255, 0.6);
+	background: rgba(5, 1, 1, 0.8);
+
+	border: 1px solid gray;
+	transition: background 1s, border 1s, color 1s;
+}
+#main:hover{
+	transition: background 1s, border 1s, color 1s;
+	background: rgba(50, 1, 1, 0.6);
+	border: 1px solid white;
+	color: rgba(255, 255, 255, 1);
+}
+	#title{
+		font: 65px sans-serif, times;
+		color: rgba(255, 255, 255, 0.7);
+	}
+	#input{
+		margin: 10px auto;
+		width: 400px;
+		height: 30px;
+		color: white;
+		border: 1px solid white;
+		background: rgba(1, 1, 100, 0.5);	
+		transition: background 1s;
+	}
+	#output{
+		display: none;
+		width: 50%;
+		padding: 10px;
+		border: 1px solid white;
+		color: rgba(255, 255, 255, 1);
+		background: rgba( 1, 1, 100, 0.5);
+		transition: background 1s;
+	}
+	#input:hover, #output:hover{
+		transition: background 1s;
+		background: none;
+	}
+	#clear{
+		display: none;
+	}
+	.button{
+		width: 25%;
+		height: 30px;
+		color: white;
+		border: 1px solid white;
+		background: rgba(1, 1, 1, 0.5);	
+		transition: background 1s, border 1s;
+	}
+	.button:hover{
+		cursor: pointer;
+		transition: background 1s, border 1s;
+		background: rgba(1, 1, 1, 0.5);	
+		border: 1px solid white;	
+	}
+
+/* CSS default override */
+body{ margin: 0px; border: 0px; padding: 0px; box-sizing: border-box; font-family: sans-serif, times; } 
+a{ cursor: pointer; text-decoration: none; }
+h1, h2, h3{ margin: 0; }
+</style>
+
+<head>
+<meta charset="utf-8">    
+<meta name="viewport" content="width=device-width">
+<meta name="description" content="AJAX | Advanced">
+<title> AJAX | Advanced</title>
+<link rel="stylesheet" href="Ajax.css">
+<script src="Ajax.js"></script> 
+</head>
+<body>
+	<div id="video_container">
+        <script>document.getElementById("myVideo").playbackRate = 0.5;</script>
+       	<video id="myVideo" src="assets/video/Water_1.mp4" width="100%" 
+       		   style="filter:brightness(30%)" autoplay loop muted>
+       	</video>
+   	</div>
+    
+	<div id="container">
+
+		<div id="main">
+			<p id="main_text">
+				<span id="title">
+				Asynchronous Javscript</p></span>
+			  	Enter text into form and a new div will appear with text without reloading.<br>
+			   	Click the clear button to delete the div.</p>
+			<!-- Add action="Ajax.php" to route to php file without AJAX -->
+			<form id="form" onsubmit="changeText(); return false">
+				Input: <br><br>
+				<input id="input" name="input" type="text" placeholder="Enter text"><br><br>
+				<input class="button" type="submit" value="Send"><br><br>
+			</form>
+			
+			<div id="output">
+			</div><br>		
+			<button id="clear" class="button" onclick="clearOutput()">Clear
+			</button>
+
+		</div> <!-- End main -->
+
+	</div>
+</body>
+</html>
+<script>
+function changeText(){
+	var xhr = new XMLHttpRequest();
+	var url = "Ajax.php?input=" + document.getElementById('input').value;
+	console.log( xhr );
+
+	var output = document.getElementById("output");
+	var clear = document.getElementById("clear");
+					
+	xhr.onload = function(){
+		if( this.status == 200 ){	
+			console.log (this.responseText );
+
+			//Create new div to append to chat
+			var node = document.createElement('div');
+			node.innerHTML = this.responseText;
+			console.log( "node HTML: " + node.innerHTML );
+			document.getElementById('output').style.display = "block";
+			document.getElementById('clear').style.display = "block";
+			document.getElementById('output').appendChild( node );
+		}
+	}
+	xhr.open('GET', url, true);
+	xhr.send();
+	// 200 is ok, 403 forbidden, 404 not found
+}
+function clearOutput(){
+	var output = document.getElementById("output");
+	var clear = document.getElementById("clear");
+	output.style.display = "none";
+	clear.style.display = "none";
+	output.innerHTML = null;
+}
+</script>
+
+
+
